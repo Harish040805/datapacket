@@ -5,103 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Snake Data Packet Robot</title>
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(to bottom right, royalblue, #2f4b9f);
-    font-family: Arial, sans-serif;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    transform-origin: center center;
-  }
-
-  .container.head {
-    width: 105px;
-    height: 50px;
-    border-radius: 50px;
-    background-color: rgba(255, 0, 0, 0.427);
-    border: 5px solid #c15656;
-  }
-
-  .container.body {
-    width: 95px;
-    height: 40px;
-    border-radius: 10px;
-    background-color: rgba(255,255,255,0.427);
-    border: 5px solid #c1c1c1;
-  }
-
-  .container.bodyo {
-    width: 95px;
-    height: 40px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0);
-  }
-
-  .container.tail {
-    width: 100px;
-    height: 20px;
-    clip-path: polygon(0% 50%, 100% 0%, 100% 100%);
-    background-color: rgba(0, 12, 70, 0.427);
-    border: 5px solid #61688d;
-  }
-
-  #control-panel {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .control-btn {
-    padding: 10px 15px;
-    background-color: white;
-    border: 2px solid #333;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-
-  .control-btn:hover {
-    background-color: #eee;
-  }
-
-  input{
-    width: 60px;
-    height: 25px;
-  }
-
-  .inp{
-    background-color: #c15656;
-    color: #fff;
-  }
-
-  label {
-    color: white;
-    font-weight: bold;
-    margin-left: 10px;
-  }
-
-  input[type="range"] {
-    width: 120px;
-  }
+  body { margin: 0; height: 100vh; background: linear-gradient(to bottom right, royalblue, #2f4b9f); font-family: Arial, sans-serif; overflow: hidden; 
+        position: relative; }
+  .container { position: absolute; display: flex; justify-content: center; align-items: center; user-select: none; transform-origin: center center; }
+  .container.head { width: 105px; height: 50px; border-radius: 50px; background-color: rgba(255, 0, 0, 0.427); border: 5px solid #c15656; }
+  .container.body { width: 95px; height: 40px; border-radius: 10px; background-color: rgba(255,255,255,0.427); border: 5px solid #c1c1c1; }
+  .container.bodyo { width: 95px; height: 40px; border-radius: 10px; background-color: rgba(255, 255, 255, 0); }
+  .container.tail { width: 100px; height: 20px; clip-path: polygon(0% 50%, 100% 0%, 100% 100%); background-color: rgba(0, 12, 70, 0.427); 
+                   border: 5px solid #61688d; }
+  #control-panel { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .control-btn { padding: 10px 15px; background-color: white; border: 2px solid #333; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  .control-btn:hover { background-color: #eee; }
+  input{ width: 60px; height: 25px; }
+  .inp{ background-color: #c15656; color: #fff; }
+  label { color: white; font-weight: bold; margin-left: 10px; }
+  input[type="range"] { width: 120px; }
 </style>
 </head>
 <body>
-
-<!-- Snake Segments with 4 inputs -->
 <div class="container head" style="top:50px; left:240px;"><input type="text" class="inp" id="input1" placeholder="header"></div>
 <div class="container bodyo" style="top:50px; left:200px;"></div>
 <div class="container bodyo" style="top:50px; left:180px;"></div>
@@ -109,46 +30,29 @@
 <div class="container body" style="top:50px; left:140px;"><input type="text" id="input3" placeholder="payload"></div>
 <div class="container body" style="top:50px; left:120px;"><input type="text" id="input4" placeholder="trailer"></div>
 <div class="container tail" style="top:50px; left:100px;"></div>
-
-<!-- Control Panel -->
 <div id="control-panel">
   <button class="control-btn" data-dir="up">↑</button>
   <button class="control-btn" data-dir="down">↓</button>
   <button class="control-btn" data-dir="left">←</button>
   <button class="control-btn" data-dir="right">→</button>
-
   <label>Speed</label>
   <input type="range" id="speed-slider" min="5" max="50" value="20">
-
   <label>Clear DB</label>
   <input type="range" id="clear-slider" min="0" max="100" value="0">
 </div>
-
 <script>
-// IndexedDB setup
 let db;
 const dbName = "snakeDB";
 const storeName = "inputs";
-
 const request = indexedDB.open(dbName, 1);
-request.onupgradeneeded = function(event) {
-  db = event.target.result;
-  db.createObjectStore(storeName, { keyPath: "id" });
-};
-request.onsuccess = function(event) {
-  db = event.target.result;
-  loadInputs();
-};
-request.onerror = function() {
-  console.error("Error opening IndexedDB");
-};
-
+request.onupgradeneeded = function(event) { db = event.target.result; db.createObjectStore(storeName, { keyPath: "id" }); };
+request.onsuccess = function(event) { db = event.target.result; loadInputs(); };
+request.onerror = function() { console.error("Error opening IndexedDB"); };
 function saveInput(id, value) {
   const tx = db.transaction(storeName, "readwrite");
   const store = tx.objectStore(storeName);
   store.put({ id, value });
 }
-
 function loadInputs() {
   const tx = db.transaction(storeName, "readonly");
   const store = tx.objectStore(storeName);
@@ -159,25 +63,15 @@ function loadInputs() {
     };
   });
 }
-
 function clearAllInputs() {
   ["input1","input2","input3","input4"].forEach(id => {
     document.getElementById(id).value = "";
   });
-
   const tx = db.transaction(storeName, "readwrite");
   const store = tx.objectStore(storeName);
   store.clear();
 }
-
-// Save inputs to DB
-["input1","input2","input3","input4"].forEach(id => {
-  document.getElementById(id).addEventListener("input", e => {
-    if(db) saveInput(id, e.target.value);
-  });
-});
-
-// Snake logic
+["input1","input2","input3","input4"].forEach(id => { document.getElementById(id).addEventListener("input", e => { if(db) saveInput(id, e.target.value); }); });
 const containers = Array.from(document.querySelectorAll('.container'));
 const head = containers[0];
 let speed = 20;
@@ -186,9 +80,7 @@ const positionHistory = containers.map(c => [{ left: c.offsetLeft, top: c.offset
 const MAX_HISTORY = 200;
 let targetHeadAngle = 0;
 let currentHeadAngle = 0;
-
 function lerp(a, b, t) { return a + (b - a) * t; }
-
 function moveSnake(dx, dy){
   let headLeft = head.offsetLeft + dx * speed;
   let headTop = head.offsetTop + dy * speed;
@@ -204,55 +96,25 @@ function moveSnake(dx, dy){
   positionHistory[0].unshift({left:headLeft, top:headTop});
   if(positionHistory[0].length>MAX_HISTORY) positionHistory[0].pop();
   for(let i=1;i<containers.length;i++){
-    const prevHistory = positionHistory[i-1];
-    let idx = SEGMENT_SPACING*i;
-    if(idx>=prevHistory.length) idx=prevHistory.length-1;
-    const pos = prevHistory[idx];
-    containers[i].style.left=pos.left+'px';
-    containers[i].style.top=pos.top+'px';
-    const dxSeg=prevHistory[0].left-pos.left;
-    const dySeg=prevHistory[0].top-pos.top;
-    const angle=Math.atan2(dySeg, dxSeg)*(180/Math.PI);
-    containers[i].style.transform=`rotate(${angle}deg)`;
-    positionHistory[i].unshift({left:pos.left, top:pos.top});
-    if(positionHistory[i].length>MAX_HISTORY) positionHistory[i].pop();
+    const prevHistory = positionHistory[i-1]; let idx = SEGMENT_SPACING*i; if(idx>=prevHistory.length) idx=prevHistory.length-1;
+    const pos = prevHistory[idx]; containers[i].style.left=pos.left+'px'; containers[i].style.top=pos.top+'px';
+    const dxSeg=prevHistory[0].left-pos.left; const dySeg=prevHistory[0].top-pos.top; const angle=Math.atan2(dySeg, dxSeg)*(180/Math.PI);
+    containers[i].style.transform=`rotate(${angle}deg)`; positionHistory[i].unshift({left:pos.left, top:pos.top});
+    if(positionHistory[i].length>MAX_HISTORY) { positionHistory[i].pop(); }
   }
 }
-
-// Keyboard controls
-document.addEventListener('keydown', (e) => {
-  if(e.key==="ArrowUp") moveSnake(0,-0.5);
-  if(e.key==="ArrowDown") moveSnake(0,0.5);
-  if(e.key==="ArrowLeft") moveSnake(-0.5,0);
-  if(e.key==="ArrowRight") moveSnake(0.5,0);
-});
-
-// Button controls
+document.addEventListener('keydown', (e) => { if(e.key==="ArrowUp") moveSnake(0,-0.5); if(e.key==="ArrowDown") moveSnake(0,0.5); 
+  if(e.key==="ArrowLeft") { moveSnake(-0.5,0); } if(e.key==="ArrowRight") {moveSnake(0.5,0); } });
 document.querySelectorAll('.control-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const dir = btn.dataset.dir;
-    if(dir==="up") moveSnake(0,-0.5);
-    if(dir==="down") moveSnake(0,0.5);
-    if(dir==="left") moveSnake(-0.5,0);
-    if(dir==="right") moveSnake(0.5,0);
+  btn.addEventListener('click', () => { const dir = btn.dataset.dir; if(dir==="up") moveSnake(0,-0.5); 
+    if(dir==="down") { moveSnake(0,0.5); } if(dir==="left") { moveSnake(-0.5,0); } if(dir==="right") { moveSnake(0.5,0); }
   });
 });
-
-// Speed slider
-document.getElementById("speed-slider").addEventListener("input", e => {
-  speed = parseInt(e.target.value);
-});
-
-// Clear DB slider
+document.getElementById("speed-slider").addEventListener("input", e => { speed = parseInt(e.target.value); });
 const clearSlider = document.getElementById("clear-slider");
 clearSlider.addEventListener("change", () => {
-  if(clearSlider.value>=90){
-    const confirmClear = confirm("Do you want to clear all the data?");
-    if(confirmClear) clearAllInputs();
-    clearSlider.value=0;
-  }
+  if(clearSlider.value>=90){ const confirmClear = confirm("Do you want to clear all the data?"); if(confirmClear) clearAllInputs(); clearSlider.value=0; }
 });
 </script>
-
 </body>
 </html>
