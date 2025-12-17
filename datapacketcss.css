@@ -1,0 +1,15 @@
+  body { margin: 0; height: 100vh; background: linear-gradient(to bottom right, royalblue, #2f4b9f); font-family: Arial, sans-serif; overflow: hidden; 
+        position: relative; }
+  .container { position: absolute; display: flex; justify-content: center; align-items: center; user-select: none; transform-origin: center center; }
+  .container.head { width: 105px; height: 50px; border-radius: 50px; background-color: rgba(255, 0, 0, 0.427); border: 5px solid #c15656; }
+  .container.body { width: 95px; height: 40px; border-radius: 10px; background-color: rgba(255,255,255,0.427); border: 5px solid #c1c1c1; }
+  .container.bodyo { width: 95px; height: 40px; border-radius: 10px; background-color: rgba(255, 255, 255, 0); }
+  .container.tail { width: 100px; height: 20px; clip-path: polygon(0% 50%, 100% 0%, 100% 100%); background-color: rgba(0, 12, 70, 0.427); 
+                   border: 5px solid #61688d; }
+  #control-panel { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .control-btn { padding: 10px 15px; background-color: white; border: 2px solid #333; border-radius: 5px; cursor: pointer; font-weight: bold; }
+  .control-btn:hover { background-color: #eee; }
+  input{ width: 60px; height: 25px; }
+  .inp{ background-color: #c15656; color: #fff; }
+  label { color: white; font-weight: bold; margin-left: 10px; }
+  input[type="range"] { width: 120px; }
