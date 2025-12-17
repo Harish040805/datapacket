@@ -94,7 +94,7 @@ function moveSnake(dx, dy){
   currentHeadAngle = lerp(currentHeadAngle, targetHeadAngle, 0.2);
   head.style.transform = `rotate(${currentHeadAngle}deg)`;
   positionHistory[0].unshift({left:headLeft, top:headTop});
-  if(positionHistory[0].length>MAX_HISTORY) positionHistory[0].pop();
+  if(positionHistory[0].length>MAX_HISTORY) {positionHistory[0].pop();}
   for(let i=1;i<containers.length;i++){
     const prevHistory = positionHistory[i-1]; let idx = SEGMENT_SPACING*i; if(idx>=prevHistory.length) idx=prevHistory.length-1;
     const pos = prevHistory[idx]; containers[i].style.left=pos.left+'px'; containers[i].style.top=pos.top+'px';
@@ -103,10 +103,10 @@ function moveSnake(dx, dy){
     if(positionHistory[i].length>MAX_HISTORY) { positionHistory[i].pop(); }
   }
 }
-document.addEventListener('keydown', (e) => { if(e.key==="ArrowUp") moveSnake(0,-0.5); if(e.key==="ArrowDown") moveSnake(0,0.5); 
-  if(e.key==="ArrowLeft") { moveSnake(-0.5,0); } if(e.key==="ArrowRight") {moveSnake(0.5,0); } });
+document.addEventListener('keydown', (e) => { if(e.key==="ArrowUp") { moveSnake(0,-0.5); } if(e.key==="ArrowDown") { moveSnake(0,0.5); } 
+  if(e.key==="ArrowLeft") { moveSnake(-0.5,0); } if(e.key==="ArrowRight") { moveSnake(0.5,0); } });
 document.querySelectorAll('.control-btn').forEach(btn => {
-  btn.addEventListener('click', () => { const dir = btn.dataset.dir; if(dir==="up") moveSnake(0,-0.5); 
+  btn.addEventListener('click', () => { const dir = btn.dataset.dir; if(dir==="up") { moveSnake(0,-0.5); }
     if(dir==="down") { moveSnake(0,0.5); } if(dir==="left") { moveSnake(-0.5,0); } if(dir==="right") { moveSnake(0.5,0); }
   });
 });
